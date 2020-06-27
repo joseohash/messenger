@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useCallback, ChangeEvent } from 'react';
+import io from 'socket.io-client';
 
-function App() {
+const socket = io('http://localhost:3333');
+
+socket.on('connect', () => console.log('usuario entrou'));
+
+const App: React.FC = () => {
+  const [message, setMessage] = useState('');
+
+  const handleChangeMessage = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setMessage(e.target.value);
+    },
+    [],
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <input
+        type="text"
+        placeholder="Digite sua mensagem"
+        size={50}
+        value={message}
+        onChange={handleChangeMessage}
+      />
+      <button type="button">Enviar mensagem</button>
     </div>
   );
-}
+};
 
 export default App;
