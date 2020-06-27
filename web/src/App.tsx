@@ -15,6 +15,10 @@ const App: React.FC = () => {
     [],
   );
 
+  const handleSendMessage = useCallback(() => {
+    socket.emit('chat message', message);
+  }, [message]);
+
   return (
     <div>
       <input
@@ -24,7 +28,9 @@ const App: React.FC = () => {
         value={message}
         onChange={handleChangeMessage}
       />
-      <button type="button">Enviar mensagem</button>
+      <button type="button" onClick={handleSendMessage}>
+        Enviar mensagem
+      </button>
     </div>
   );
 };
