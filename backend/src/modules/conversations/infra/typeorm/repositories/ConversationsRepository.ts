@@ -21,6 +21,20 @@ class ConversationsRepository implements IConversationsRepository {
 
     return conversation;
   }
+
+  public async findByIds(
+    user1_id: string,
+    user2_id: string,
+  ): Promise<Conversation | undefined> {
+    const conversation = await this.ormRepository.findOne({
+      where: [
+        { user1_id, user2_id },
+        { user1_id: user2_id, user2_id: user1_id },
+      ],
+    });
+
+    return conversation;
+  }
 }
 
 export default ConversationsRepository;

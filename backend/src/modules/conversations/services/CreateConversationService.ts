@@ -1,4 +1,5 @@
 import { inject, injectable } from 'tsyringe';
+import AppError from '@shared/errors/AppError';
 import IConversationsRepository from '../repositories/IConversationsRepository';
 import Conversation from '../infra/typeorm/entities/Conversation';
 
@@ -18,12 +19,21 @@ class CreateConversationService {
     user1_id,
     user2_id,
   }: IRequest): Promise<Conversation> {
-    const conversation = await this.conversationsRepository.create({
+    const foundConversation = await this.conversationsRepository.findByIds(
       user1_id,
       user2_id,
-    });
+    );
 
-    return conversation;
+    if (!foundConversation) {
+      const conversation = await this.conversationsRepository.create({
+        user1_id,
+        user2_id,
+      });
+
+      return conversation;
+    }
+
+    return foundConversation;
   }
 }
 
